@@ -33,6 +33,7 @@ For instance, level 1.3 would be `game([[r,r],[r,g]],[[r,g],[r,r]],1).`. Level 1
 Todo
 ====
 
+ - minimize search space by adding the permutation check in the check\_board predicate.
  - figure out how to use minimize/1 or a similar variant to auto-compute best solution.
 
 
