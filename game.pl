@@ -32,9 +32,9 @@ game(InCond,OutCond,MaxFlips) :-
     generate_matrix(W1,H1,var,Right),
     % seed the borders of the Down and Right arrays with the conditions
     matrix_row(Down,0,InTop),
-    matrix_row(Down,Height,OutBot),
+    matrix_row_alt(Down,Height,OutBot),
     matrix_col(Right,0,InLeft),
-    matrix_col(Right,Width,OutRight),
+    matrix_col_alt(Right,Width,OutRight),
     Game=[M,Down,Right],
     check_game_board(M,1,Game),
     print_matrix(M).
@@ -191,3 +191,20 @@ height(M,H) :- M = [Row|_] , length(Row,H).
 cell(M,X,Y,V) :- nth1(Y,M,Row) , nth1(X,Row,V).
 cell0(M,X,Y,V) :- nth0(Y,M,Row) , nth0(X,Row,V).
 
+
+
+%%%% experiment
+is_in(What,Where) :-
+    atom_chars(Where,List),
+    member(What,List).
+
+
+matrix_row_alt(M,Y,ListAlt) :-
+    nth0(Y,M,[_|Row]),
+    maplist(is_in,Row,ListAlt).
+
+
+matrix_col_alt(M,X,ListAlt) :-
+    Val =.. [nth0,X],
+    maplist(Val,M,[_|Col]),
+    maplist(is_in,Col,ListAlt).
