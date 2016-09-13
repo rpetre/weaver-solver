@@ -21,6 +21,13 @@ game(InCond,OutCond,MaxFlips) :-
     length(OutBot,Width),
     length(InLeft,Height),
     length(OutRight,Height),
+    % generate possible single-choice outputs...
+    maplist(is_in,OutBotVar,OutBot),
+    maplist(is_in,OutRightVar,OutRight),
+    append([InTop,InLeft],AllIn),
+    append([OutBotVar,OutRightVar],AllOut),
+    % ... then validate them as permutations of inputs
+    is_permutation(AllIn,AllOut),
     % M is the boolean array of flips
     generate_matrix(Width,Height,is_boolean,M),
     max_flips(M,MaxFlips),
@@ -32,9 +39,9 @@ game(InCond,OutCond,MaxFlips) :-
     generate_matrix(W1,H1,var,Right),
     % seed the borders of the Down and Right arrays with the conditions
     matrix_row(Down,0,InTop),
-    matrix_row_alt(Down,Height,OutBot),
+    matrix_row(Down,Height,OutBotVar),
     matrix_col(Right,0,InLeft),
-    matrix_col_alt(Right,Width,OutRight),
+    matrix_col(Right,Width,OutRightVar),
     Game=[M,Down,Right],
     check_game_board(M,1,Game),
     print_matrix(M).
@@ -198,13 +205,6 @@ is_in(What,Where) :-
     atom_chars(Where,List),
     member(What,List).
 
-
-matrix_row_alt(M,Y,ListAlt) :-
-    nth0(Y,M,[_|Row]),
-    maplist(is_in,Row,ListAlt).
-
-
-matrix_col_alt(M,X,ListAlt) :-
-    Val =.. [nth0,X],
-    maplist(Val,M,[_|Col]),
-    maplist(is_in,Col,ListAlt).
+is_permutation(List1,List2) :-
+    msort(List1,Sorted),
+    msort(List2,Sorted).
