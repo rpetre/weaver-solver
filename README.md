@@ -21,10 +21,13 @@ The required conventions are as follows:
 To run the solver, start swipl in the program directory, run `[game].` to load game.pl and query the game predicate in the 
 with the input and output conditions plus the maximumi number of flips you want (the stars are awarded based on the number of twists).
 
-For instance, the first level is `game([[red,red],[red,green]],[[red,green],[red,red]],1).` (The name of the colours doesn't matter as long as they're consistent).
+For instance, level 1.3 would be `game([[red,red],[red,green]],[[red,green],[red,red]],1).` (The name of the colours doesn't matter as long as they're consistent).
 
 
 Todo
 ====
 
  - come up with a representation of output conditions that can take alternatives
+
+
+Play store link: https://play.google.com/store/apps/details?id=net.pyrosphere.weaver&hl=en
