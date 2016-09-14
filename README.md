@@ -33,8 +33,9 @@ For instance, level 1.3 would be `game([[r,r],[r,g]],[[r,g],[r,r]],1).`. Level 1
 Todo
 ====
 
- - minimize search space by adding the permutation check in the check\_board predicate.
- - figure out how to use minimize/1 or a similar variant to auto-compute best solution.
+ - replace M with a sparse array to reduce problem space on large boards ( 4.22 is 6x5 and it turns out the problem is
+   finding a sparse enough matrix)
+ - if M becomes a sparse array, start with 0 flips and increase the length until at least a solution is found
 
 
 Play store link: https://play.google.com/store/apps/details?id=net.pyrosphere.weaver&hl=en

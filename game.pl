@@ -56,6 +56,7 @@ game(InCond,OutCond,MaxFlips) :-
  */
 check_game_board([],_,_).
 check_game_board([Row|Rows],Y,Game) :-
+    check_colours_valid(Y,Game),
     check_game_row(Row,1,Y,Game),
     Y1 is Y+1,
     check_game_board(Rows,Y1,Game).
@@ -191,8 +192,8 @@ print_val(0) :- print('+').
 print_val(1) :- print('X').
 
 % predicates to compute width and height of a row-based matrix
-width(M,W) :- length(M,W), W is W.
-height(M,H) :- M = [Row|_] , length(Row,H).
+height(M,H) :- length(M,H).
+width(M,W) :- M = [Row|_] , length(Row,W).
 
 % predicates to extract a specific cell of a matrix, both 1 and 0 indexed versions
 cell(M,X,Y,V) :- nth1(Y,M,Row) , nth1(X,Row,V).
@@ -208,3 +209,31 @@ is_in(What,Where) :-
 is_permutation(List1,List2) :-
     msort(List1,Sorted),
     msort(List2,Sorted).
+
+%% given a row number and a list of M,Down,Right arrays, validate that for the
+%   subset of M starting at row Y, the aggregated inputs are a valid permutation
+%   of the aggregated outputs
+%  it should only be called when all the inputs have been already bound, but optionally check for free variables and return true in that case
+check_colours_valid(1,_).
+check_colours_valid(Y,[M,Down,Right]) :-
+    Y > 1,
+    Y1 is Y-1,
+    height(M,H), width(M,W),
+    matrix_row(Down,Y1,InTop),
+    % early return if InTop contains free variables, to prevent weird unification
+    % the rest of the borders should be safely bound
+    maplist(nonvar,InTop),
+    matrix_row(Down,H,OutBot),
+    matrix_col(Right,0,InLeftAll),
+    tail(Y1,InLeftAll,InLeft),
+    matrix_col(Right,W,OutRightAll),
+    tail(Y1,OutRightAll,OutRight),
+    append([InTop,InLeft],AllIn),
+    append([OutBot,OutRight],AllOut),
+    is_permutation(AllIn,AllOut).
+
+% tail(+Num:int, +List:list, -Tail:list)
+%% tail/3 should remove Num elements from beginning of a list
+tail(N,List,Tail) :-
+    length(P,N),
+    append(P,Tail,List).
